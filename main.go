@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"sync"
 
 	"github.com/stevensopi/smart_investor/symbol_processor/internal/adapters/config"
 	"github.com/stevensopi/smart_investor/symbol_processor/internal/adapters/repo"
@@ -19,9 +20,17 @@ func main() {
 		log.Fatalf("---> Could not create repo %v\n", err)
 	}
 
-	subscriber, err := subscriber.NewKafkaSubscriber(config, repo)
-	if err != nil {
-		log.Fatalf("---> Could not create subscriber %v\n", err)
-	}
-	subscriber.Run()
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+
+		subscriber, err := subscriber.NewKafkaSubscriber(config, repo)
+		if err != nil {
+			log.Fatalf("---> Could not create subscriber %v\n", err)
+		}
+		subscriber.Run()
+	}()
+
 }
