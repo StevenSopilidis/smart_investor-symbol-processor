@@ -31,7 +31,7 @@ func NewRedisSymbolRepo(config config.Config) (ports.ISymbolRepo, error) {
 }
 
 func (r *RedisSymbolRepo) Put(data domain.SymbolData) error {
-	err := r.client.Set(context.Background(), data.Ticker, data.CurrentPrice, 0).Err()
+	err := r.client.RPush(context.Background(), data.Ticker, data.CurrentPrice, 0).Err()
 
 	return err
 }
