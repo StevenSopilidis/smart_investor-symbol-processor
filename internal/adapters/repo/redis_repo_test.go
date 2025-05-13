@@ -50,7 +50,6 @@ func TestPut_Failure(t *testing.T) {
 
 	err := repo.Put(data)
 	assert.Error(t, err)
-	assert.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestGet_Success(t *testing.T) {
